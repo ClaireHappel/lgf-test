@@ -16,10 +16,15 @@ var _ = require('underbar');
  *
  * 4. To test your work, run the following command in your terminal:
  *
- *    npm start --prefix ./lgf-test
+ *     npm start --prefix ./lgf-test
+ * 
+ *    (use cd .. if you are not in workspace)
  *
  *    IMPORTANT: Make sure you replace <YOUR_GITHUB_FOLDER with your actual github folder name that is in your workspace.
  */
+
+//I: an array of objects (collection of customers)
+//O: the number of customers that are male
 
 var maleCount = function(array){
     let males = _.filter(array, function(customer){
@@ -29,38 +34,178 @@ var maleCount = function(array){
     return males.length;
 };
 
+//I: an array of objects (collection of customers)
+//O: the number of customers that are female
+//C: use reduce
+
 var femaleCount = function(array) {
-    let females = _.reduce(array, function(accumulator, current) {
+    let females = _.reduce(array, function(acc, current) {
           if (current.gender === 'female') {
-            accumulator += 1;
+            return acc += 1;
+          } else {
+            return acc;
           }
     }, 0);
     return females;
 };
 
+//I: an array of objects (collection of customers)
+//O: the name of the oldest customer
+//C: use reduce
+
 var oldestCustomer = function(array) {
-   let oldest = _.reduce(Array, function(accumulator, current) {
+   let oldest = _.reduce(array, function(acc, current) {
     //don't need a seed value because we are looking for oldest customer
-    //determine if current customer is older than accumlator
-      //else
+    if (acc.age > current.age) {
+      return acc;
+    } else {
+      return current;
+    }
    });
+   return oldest.name;
 };
 
-var youngestCustomer;
+//I: an array of objects (collection of customers)
+//O: the name of the youngest customer
 
-var averageBalance;//find a way to convert a string $3,868.37 to number 3868.37
-//regular expressions or replaceAll(/[$,]/g, '')
+var youngestCustomer = function(array) {
+  let youngest = _.reduce(array, function(acc, current) {
+   //don't need a seed value because we are looking for youngest customer
+   if (acc.age < current.age) {
+     return acc;
+   } else {
+     return current;
+   }
+  });
+  return youngest.name;
+};
+
+//I: an array of objects (collection of customers)
+//O: find the average balance of all customers
+
+function averageBalance(array) {
+
+  let numBalance = array.reduce((acc, current) => {
+    if (current) {
+      acc.push(Number(current.balance.replaceAll(/[$,]/g,'')));
+    }
+    return acc;
+  }, []);
+
+  let total = 0;
+  let numCount = 0;
+
+  for (let i = 0; i < numBalance.length; i++) {
+     total += numBalance[i];
+     numCount += 1;
+   }  
+
+  return total/numCount;
+}
+
+//I: an array of objects (collection of customers), and a target letter
+//O: return the number of times any customer's name starts with the given letter
+
+function firstLetterCount(array, letter) {
+
+  let letterSearch = array.reduce((acc, current) => {
+    if (current.name.charAt(0) === letter.toUpperCase() || current.name.charAt(0) === letter.toLowerCase()) {
+      acc += 1;
+    }
+    return acc;
+  }, 0)
+
+  return letterSearch;
+  
+}
+
+// ### 7: `friendFirstLetterCount`
+//  - **Objective**: Find how many friends of a given customer have names that start with a given letter
+//  - **Input**: `Array`, `Customer`, `Letter`
+//  - **Output**: `Number`
+//  - **Constraints**:
+
+//I: an array of objects (collection of customers)
+//O: the number of friends a given customer has that have names that start with the indicated letter
+
+function friendFirstLetterCount(array, customer, letter) {
+
+  let friendSearch = array.reduce((acc, current) => {
+    if (current.name === customer) {
+      for (let i = 0; i < current.friends.length; i++) {
+         if (current.friends[i].name.charAt(0) === letter.toUpperCase() || current.friends[i].name.charAt(0) === letter.toUpperCase()) {
+             acc += 1;
+         }
+      }
+    }
+    return acc;
+  }, 0)
+
+  return friendSearch;
+}
+
+// ### 8: `friendsCount`
+//  - **Objective**: Find the customers' names that have a given customer's name in their friends list
+//  - **Input**: `Array`, `Name`
+//  - **Output**: `Array`
+//  - **Constraints**:
+
+//I: an array of objects (collection of customers)
+//O: an array of all customers that are friends with the given name
+
+function friendsCount(array, name) {
+  let findAllFriends = array.reduce((acc, current) => {
+      for (let i = 0; i < current.friends.length; i++) {
+         if (current.friends[i].name === name) {
+             acc.push(current.name);
+         }
+      }
+    return acc;
+  }, [])
+  return findAllFriends;
+}
+
+// ### 9: `topThreeTags`
+//  - **Objective**: Find the three most common tags among all customers' associated tags
+//  - **Input**: `Array`
+//  - **Output**: `Array`
+//  - **Constraints**:
+
+//I: an array of objects (collection of customers)
+//O: find the three most common tags within each customer object
+
+function topThreeTags(array) {
+
+  let tagArray = array.reduce((acc, current) => {
+    for (let key in current) {
+      if (!acc[current[key]]) {
+        acc[current[key]] = 1;
+      } else {
+        acc[current[key]] += 1;
+      }
+    }
+    return acc;
+  }, {});
+
+};
 
 
-var firstLetterCount;
+//I: an array of objects (collection of customers)
+//O: an object with a key of every gender and value of occurances of said gender within the array
+//C: use reduce
 
-var friendFirstLetterCount;
+function genderCount(array) {
+ let genderObj = array.reduce((acc, current) => {
+  if (acc[current.gender]) {
+    acc[current.gender] += 1;
+  } else {
+   acc[current.gender] = 1;
+  }
+  return acc;
+ }, {});
 
-var friendsCount;
-
-var topThreeTags;
-
-var genderCount;
+ return genderObj;
+}
 
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
