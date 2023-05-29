@@ -119,12 +119,6 @@ function firstLetterCount(array, letter) {
   
 }
 
-// ### 7: `friendFirstLetterCount`
-//  - **Objective**: Find how many friends of a given customer have names that start with a given letter
-//  - **Input**: `Array`, `Customer`, `Letter`
-//  - **Output**: `Number`
-//  - **Constraints**:
-
 //I: an array of objects (collection of customers)
 //O: the number of friends a given customer has that have names that start with the indicated letter
 
@@ -144,12 +138,6 @@ function friendFirstLetterCount(array, customer, letter) {
   return friendSearch;
 }
 
-// ### 8: `friendsCount`
-//  - **Objective**: Find the customers' names that have a given customer's name in their friends list
-//  - **Input**: `Array`, `Name`
-//  - **Output**: `Array`
-//  - **Constraints**:
-
 //I: an array of objects (collection of customers)
 //O: an array of all customers that are friends with the given name
 
@@ -165,30 +153,43 @@ function friendsCount(array, name) {
   return findAllFriends;
 }
 
-// ### 9: `topThreeTags`
-//  - **Objective**: Find the three most common tags among all customers' associated tags
-//  - **Input**: `Array`
-//  - **Output**: `Array`
-//  - **Constraints**:
-
 //I: an array of objects (collection of customers)
 //O: find the three most common tags within each customer object
 
 function topThreeTags(array) {
 
   let tagArray = array.reduce((acc, current) => {
-    for (let key in current) {
-      if (!acc[current[key]]) {
-        acc[current[key]] = 1;
-      } else {
-        acc[current[key]] += 1;
-      }
+    for (let i = 0; i < current['tags'].length; i++) {
+      acc.push(current.tags[i]);
     }
     return acc;
-  }, {});
+  }, []);
 
-};
+  let countObj = tagArray.reduce((acc, current) => {
+    if (acc[current]) {
+      acc[current] += 1;
+    } else {
+      acc[current] = 1;
+    }
+      return acc;
+    }, {});
 
+  // [[d, 3], [c, 2], [a, 1]] => change object to a nested array
+  let objArray = Object.entries(countObj);
+   
+  //array.sort() method to sort the nested array alphabetically
+  objArray.sort((a, b) => b[1] - a[1]);
+
+  let topThree = objArray.slice(0, 3); 
+  let unNest = [];
+
+  for (let j = 0; j < topThree.length; j++) {
+    unNest.push(topThree[j][0]);
+  }
+
+ return unNest;
+
+}  
 
 //I: an array of objects (collection of customers)
 //O: an object with a key of every gender and value of occurances of said gender within the array
